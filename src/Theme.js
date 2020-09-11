@@ -4,6 +4,10 @@ import {yellow} from 'color-name';
 export const Colors = {
   primary: '#0073de',
   accent: '#ffda1e',
+  white: '#fff',
+  gray: '#666',
+  background: '#fff',
+  error: '#fc0000'
 };
 
 export const Theme = StyleSheet.create({
