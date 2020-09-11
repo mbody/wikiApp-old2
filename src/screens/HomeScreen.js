@@ -5,6 +5,9 @@ import {Colors, Theme} from '../Theme';
 import {ActivityIndicator, Searchbar, Card} from 'react-native-paper';
 import {wikiService} from '../services/WikiService';
 
+import {connect} from 'react-redux';
+import {addFavoriteAction, removeFavoriteAction} from '../redux/favorites';
+
 class HomeScreen extends Component {
   state = {
     searchQuery: 'nelson mandela',
@@ -42,8 +45,9 @@ class HomeScreen extends Component {
                 data={searchResultPages}
                 renderItem={this.renderPageCard}
                 keyExtractor={this._keyExtractor}
-                onEndReached={this.onLoadMore} />)
-            )}
+                onEndReached={this.onLoadMore}
+              />
+            ))}
           {searchPending && <ActivityIndicator />}
         </View>
       </View>
@@ -58,9 +62,13 @@ class HomeScreen extends Component {
         <Card.Title
           title={item.title}
           subtitle={item.description}
-          left={(props) =>
-            <Image {...props} source={{uri: item.thumbnail && item.thumbnail.source}}
-              style={{height: 45, width: 45, backgroundColor: '#ddd'}}/>}
+          left={(props) => (
+            <Image
+              {...props}
+              source={{uri: item.thumbnail && item.thumbnail.source}}
+              style={{height: 45, width: 45, backgroundColor: '#ddd'}}
+            />
+          )}
         />
       </Card>
     );
@@ -147,4 +155,19 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+// here we're mapping state to props
+const mapStateToProps = (state) => {
+  return {
+    favoritePageIds: state.favorites.pages.map((p) => p.pageid),
+  };
+};
+
+// here we're mapping actions to props
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addFavoriteAction: (p) => dispatch(addFavoriteAction(p)),
+    removeFavoriteAction: (p) => dispatch(removeFavoriteAction(p)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
