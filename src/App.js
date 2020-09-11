@@ -10,6 +10,8 @@ import HomeScreen from './screens/HomeScreen';
 import FavoriteScreen from './screens/FavoriteScreen';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import HistoryScreen from './screens/HistoryScreen';
+import SettingsScreen from './screens/SettingsScreen';
 
 const paperTheme = {
   ...DefaultTheme,
@@ -27,9 +29,11 @@ const App: () => React$Node = () => {
     <PaperProvider theme={paperTheme}>
       <SafeAreaView style={Theme.centerCenter}>
         <NavigationContainer style={Theme.centerCenter} options={{}}>
-          <Tab.Navigator style={Theme.fullSize} initialRouteName="Accueil" >
+          <Tab.Navigator style={Theme.fullSize} initialRouteName="Accueil" barStyle={{backgroundColor: 'black'}} >
             <Tab.Screen name="Home" component={HomeScreen} options={{tabBarLabel: 'Accueil', tabBarIcon: ({ color }) => (<MaterialCommunityIcons name="home" color={color} size={26} />)}} />
             <Tab.Screen name="Favorites" component={FavoriteScreen} options={{tabBarLabel: 'Favoris', tabBarIcon: ({ color }) => (<Icon name="heart" color={color} size={26} />)}}/>
+            <Tab.Screen name="History" component={HistoryScreen} options={{tabBarLabel: 'Historique', tabBarIcon: ({ color }) => (<Icon name="history" color={color} size={26} />)}}/>
+            <Tab.Screen name="Settings" component={SettingsScreen} options={{tabBarLabel: 'Paramètres', tabBarIcon: ({ color }) => (<Icon name="cog" color={color} size={26} />)}}/>
           </Tab.Navigator>
         </NavigationContainer>
       </SafeAreaView>
