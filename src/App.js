@@ -1,37 +1,45 @@
-//import liraries
-import React, {Component} from 'react';
-import {View, Text, StyleSheet, StatusBar, SafeAreaView} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import React from 'react';
+import {SafeAreaView, StyleSheet} from 'react-native';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 
-  // --------------------------------------------------- render methods
-  render() {
-    return (
-      <>
-        <StatusBar barStyle="dark-content" />
-        <SafeAreaView>
-          <Text style={styles.sectionTitle}>Hello</Text>
-          <Icon name="rocket" size={80} color="#900" />
-        </SafeAreaView>
-      </>
-    );
-  }
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Colors, Theme} from './Theme';
+import {NavigationContainer} from '@react-navigation/native';
+import HomeScreen from './screens/HomeScreen';
+import FavoriteScreen from './screens/FavoriteScreen';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-  // --------------------------------------------------- handlers
-}
+const paperTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: Colors.primary,
+    accent: Colors.accent,
+  },
+};
 
-// Component specific style
+const Tab = createMaterialBottomTabNavigator();
+
+const App: () => React$Node = () => {
+  return (
+    <PaperProvider theme={paperTheme}>
+      <SafeAreaView style={Theme.centerCenter}>
+        <NavigationContainer style={Theme.centerCenter} options={{}}>
+          <Tab.Navigator style={Theme.fullSize} initialRouteName="Accueil" >
+            <Tab.Screen name="Home" component={HomeScreen} options={{tabBarLabel: 'Accueil', tabBarIcon: ({ color }) => (<MaterialCommunityIcons name="home" color={color} size={26} />)}} />
+            <Tab.Screen name="Favorites" component={FavoriteScreen} options={{tabBarLabel: 'Favoris', tabBarIcon: ({ color }) => (<Icon name="heart" color={color} size={26} />)}}/>
+          </Tab.Navigator>
+        </NavigationContainer>
+      </SafeAreaView>
+    </PaperProvider>
+  );
+};
+
 const styles = StyleSheet.create({
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
+  icon: {
+    margin: 20,
   },
 });
 
