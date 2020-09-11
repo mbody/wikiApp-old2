@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, FlatList, Image} from 'react-native';
 import {Colors, Theme} from '../Theme';
-import {ActivityIndicator, Searchbar, Card} from 'react-native-paper';
+import {ActivityIndicator, Searchbar, Card, IconButton} from 'react-native-paper';
 import {wikiService} from '../services/WikiService';
 
 import {connect} from 'react-redux';
@@ -26,6 +26,13 @@ class HomeScreen extends Component {
       errorMsg,
       searchResultPages,
     } = this.state;
+    const {favoritePageIds} = this.props;
+    const resultWithFavorites = searchResultPages && searchResultPages.map(page => {
+      page.isFavorite = (favoritePageIds.indexOf(page.pageid) >= 0);
+      return page;
+    });
+
+
     return (
       <View style={styles.container}>
         <Searchbar
@@ -42,7 +49,7 @@ class HomeScreen extends Component {
               <Text>Aucun résultat trouvé :-( </Text>
             ) : (
               <FlatList
-                data={searchResultPages}
+                data={resultWithFavorites}
                 renderItem={this.renderPageCard}
                 keyExtractor={this._keyExtractor}
                 onEndReached={this.onLoadMore}
@@ -69,6 +76,10 @@ class HomeScreen extends Component {
               style={{height: 45, width: 45, backgroundColor: '#ddd'}}
             />
           )}
+          right={props =>
+            <IconButton icon={item.isFavorite?'heart':'heart-outline'} color={Colors.gray} size={30}
+                        onPress={() => this.toggleFavorite(item)}/>
+          }
         />
       </Card>
     );
@@ -128,6 +139,15 @@ class HomeScreen extends Component {
   };
 
   // --------------------------------------------------- privates
+
+  toggleFavorite = (page) => {
+    if (page.isFavorite) {
+      this.props.removeFavoriteAction(page);
+    } else {
+      this.props.addFavoriteAction(page);
+    }
+  }
+
   /**
    * to make each component unique
    */
