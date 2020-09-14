@@ -1,7 +1,7 @@
 import React from 'react';
-import {Animated, Text, View, StyleSheet, Easing} from 'react-native';
+import {Animated, StyleSheet, TouchableOpacity} from 'react-native';
 import {Colors} from '../Theme';
-import {IconButton} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Animatable from 'react-native-animatable';
 
 type Props = {
@@ -16,7 +16,7 @@ export default class FavoriteButton extends React.Component<Props> {
 
   render() {
     let {animValue} = this.state;
-    let {isFavorite} = this.props;
+    let {isFavorite, title} = this.props;
 
     const animatedColor = animValue.interpolate({
       inputRange: [0, 1],
@@ -24,16 +24,25 @@ export default class FavoriteButton extends React.Component<Props> {
     });
 
     return (
-      <Animatable.View animation={isFavorite ? 'pulse' : ''} iterationCount={3}>
-        <Animated.View style={[styles.bg, {backgroundColor: animatedColor}]}>
-          <IconButton
-            icon={isFavorite ? 'heart' : 'heart-outline'}
-            color={isFavorite ? Colors.red : Colors.gray}
-            size={30}
-            onPress={this.onButtonPressed}
-          />
-        </Animated.View>
-      </Animatable.View>
+      <TouchableOpacity
+        accessible={true}
+        accessibilityLabel="Bouton favoris"
+        accessibilityHint={`${
+          isFavorite ? 'Retirer' : 'Ajouter'
+        } la page ${title} ${isFavorite ? 'de' : 'à'}  vos favoris`}
+        onPress={this.onButtonPressed}>
+        <Animatable.View
+          animation={isFavorite ? 'pulse' : ''}
+          iterationCount={3}>
+          <Animated.View style={[styles.bg, {backgroundColor: animatedColor}]}>
+            <Icon
+              name={isFavorite ? 'heart' : 'heart-outline'}
+              color={isFavorite ? Colors.red : Colors.gray}
+              size={30}
+            />
+          </Animated.View>
+        </Animatable.View>
+      </TouchableOpacity>
     );
   }
 

@@ -22,6 +22,7 @@ import {addFavoriteAction, removeFavoriteAction} from '../redux/favorites';
 import {searchAction, searchClearAction} from '../redux/wikipedia';
 import * as Animatable from 'react-native-animatable';
 import FavoriteButton from '../components/FavoriteButton';
+import PageCard from '../components/PageCard';
 
 class HomeScreen extends Component {
   state = {
@@ -100,27 +101,14 @@ class HomeScreen extends Component {
 
   // --------------------------------------------------- handlers
 
-  renderPageCard = ({item, index}) => {
+  renderPageCard = ({item}) => {
     return (
-      <Card style={styles.card}>
-        <Card.Title
-          title={item.title}
-          subtitle={item.description}
-          left={(props) => (
-            <Image
-              {...props}
-              source={{uri: item.thumbnail && item.thumbnail.source}}
-              style={{height: 45, width: 45, backgroundColor: '#ddd'}}
-            />
-          )}
-          right={(props) => (
-            <FavoriteButton
-              isFavorite={item.isFavorite}
-              onPress={() => this.onToggleFavorite(item)}
-            />
-          )}
+      item && (
+        <PageCard
+          item={item}
+          onToggleFavorite={() => this.onToggleFavorite(item)}
         />
-      </Card>
+      )
     );
   };
 

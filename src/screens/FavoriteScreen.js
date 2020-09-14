@@ -13,6 +13,7 @@ import {searchAction, searchClearAction} from '../redux/wikipedia';
 import {connect} from 'react-redux';
 import {Colors, Theme} from '../Theme';
 import FavoriteButton from '../components/FavoriteButton';
+import PageCard from '../components/PageCard';
 
 type Props = {};
 
@@ -45,27 +46,12 @@ class FavoritesScreen extends Component<Props> {
 
   renderPageCard = ({item, index}) => {
     return (
-      <Card key={'card_' + index} style={styles.card}>
-        <Card.Title
-          key={'cardTitle_' + index}
-          title={item.title}
-          subtitle={item.description}
-          left={(props) => (
-            <Image
-              {...props}
-              key={'cardThumb_' + index}
-              source={{uri: item.thumbnail && item.thumbnail.source}}
-              style={{height: 45, width: 45, backgroundColor: '#ddd'}}
-            />
-          )}
-          right={(props) => (
-            <FavoriteButton
-              isFavorite={true}
-              onPress={() => this.onToggleFavorite(item)}
-            />
-          )}
+      item && (
+        <PageCard
+          item={item}
+          onToggleFavorite={() => this.onToggleFavorite(item)}
         />
-      </Card>
+      )
     );
   };
 
