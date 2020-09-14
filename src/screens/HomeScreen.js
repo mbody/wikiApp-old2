@@ -78,7 +78,7 @@ class HomeScreen extends Component {
           )}
           right={props =>
             <IconButton icon={item.isFavorite?'heart':'heart-outline'} color={Colors.gray} size={30}
-                        onPress={() => this.toggleFavorite(item)}/>
+                        onPress={() => this.onToggleFavorite(item)}/>
           }
         />
       </Card>
@@ -138,15 +138,16 @@ class HomeScreen extends Component {
     }
   };
 
-  // --------------------------------------------------- privates
-
-  toggleFavorite = (page) => {
+  onToggleFavorite = (page) => {
     if (page.isFavorite) {
       this.props.removeFavoriteAction(page);
     } else {
       this.props.addFavoriteAction(page);
     }
-  }
+  };
+
+  // --------------------------------------------------- privates
+
 
   /**
    * to make each component unique
