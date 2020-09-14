@@ -2,11 +2,17 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, View, FlatList, Image} from 'react-native';
 import {Colors, Theme} from '../Theme';
-import {ActivityIndicator, Searchbar, Card, IconButton} from 'react-native-paper';
+import {
+  ActivityIndicator,
+  Searchbar,
+  Card,
+  IconButton,
+} from 'react-native-paper';
 import {wikiService} from '../services/WikiService';
 
 import {connect} from 'react-redux';
 import {addFavoriteAction, removeFavoriteAction} from '../redux/favorites';
+import {searchAction, searchClearAction} from '../redux/wikipedia';
 
 class HomeScreen extends Component {
   state = {
@@ -20,18 +26,14 @@ class HomeScreen extends Component {
 
   // --------------------------------------------------- render methods
   render() {
-    const {
-      searchQuery,
-      searchPending,
-      errorMsg,
-      searchResultPages,
-    } = this.state;
-    const {favoritePageIds} = this.props;
-    const resultWithFavorites = searchResultPages && searchResultPages.map(page => {
-      page.isFavorite = (favoritePageIds.indexOf(page.pageid) >= 0);
-      return page;
-    });
-
+    const {searchQuery} = this.state;
+    const {favoritePageIds, searchPending, searchResult, error} = this.props;
+    const resultWithFavorites =
+      searchResult &&
+      searchResult.map((page) => {
+        page.isFavorite = favoritePageIds.indexOf(page.pageid) >= 0;
+        return page;
+      });
 
     return (
       <View style={styles.container}>
@@ -43,9 +45,9 @@ class HomeScreen extends Component {
         />
 
         <View style={styles.searchResultsContainer}>
-          {errorMsg && <Text style={styles.errorMsg}>{errorMsg}</Text>}
-          {searchResultPages &&
-            (searchResultPages.length === 0 ? (
+          {error && <Text style={styles.errorMsg}>{error}</Text>}
+          {searchResult &&
+            (searchResult.length === 0 ? (
               <Text>Aucun résultat trouvé :-( </Text>
             ) : (
               <FlatList
@@ -76,10 +78,14 @@ class HomeScreen extends Component {
               style={{height: 45, width: 45, backgroundColor: '#ddd'}}
             />
           )}
-          right={props =>
-            <IconButton icon={item.isFavorite?'heart':'heart-outline'} color={Colors.gray} size={30}
-                        onPress={() => this.onToggleFavorite(item)}/>
-          }
+          right={(props) => (
+            <IconButton
+              icon={item.isFavorite ? 'heart' : 'heart-outline'}
+              color={Colors.gray}
+              size={30}
+              onPress={() => this.onToggleFavorite(item)}
+            />
+          )}
         />
       </Card>
     );
@@ -87,55 +93,24 @@ class HomeScreen extends Component {
 
   onChangeText = (query) => {
     if (!query || query.length === 0) {
-      this.setState({searchResultPages: false, errorMsg: false});
+      this.props.searchClearAction();
     }
     this.setState({searchQuery: query});
   };
 
-  onSearch = async () => {
+  onSearch = () => {
     const {searchQuery} = this.state;
     if (!searchQuery || searchQuery.trim().length === 0) {
-      this.setState({searchResultPages: false, errorMsg: false});
+      this.props.searchClearAction();
       return;
     }
 
-    this.setState({
-      searchPending: true,
-      searchResultPages: false,
-      errorMsg: false,
-    });
-
-    try {
-      const searchResultPages = await wikiService.search(searchQuery.trim());
-      this.setState({searchPending: false, searchResultPages});
-    } catch (error) {
-      console.error('Error while searching wikipedia', error);
-      this.setState({
-        searchPending: false,
-        errorMsg:
-          "Une erreur s'est produite lors de la recherche.\nMerci de bien vouloir réessayer ultérieurement !",
-      });
-    }
+    this.props.searchAction(searchQuery.trim());
   };
 
   onLoadMore = async () => {
-    let {searchResultPages, searchQuery} = this.state;
-    this.setState({errorMsg: false});
-
-    try {
-      const moreResultPages = await wikiService.search(
-        searchQuery.trim(),
-        searchResultPages.length,
-      );
-      searchResultPages = searchResultPages.concat(moreResultPages);
-      this.setState({searchResultPages});
-    } catch (error) {
-      console.error('Error while searching wikipedia', error);
-      this.setState({
-        errorMsg:
-          "Une erreur s'est produite lors de la recherche.\nMerci de bien vouloir réessayer ultérieurement !",
-      });
-    }
+    let {searchQuery} = this.state;
+    this.props.searchAction(searchQuery.trim(), this.props.searchResult.length);
   };
 
   onToggleFavorite = (page) => {
@@ -147,7 +122,6 @@ class HomeScreen extends Component {
   };
 
   // --------------------------------------------------- privates
-
 
   /**
    * to make each component unique
@@ -178,8 +152,14 @@ const styles = StyleSheet.create({
 
 // here we're mapping state to props
 const mapStateToProps = (state) => {
+  const {favorites, wikipedia} = state;
   return {
-    favoritePageIds: state.favorites.pages.map((p) => p.pageid),
+    favoritePageIds: favorites.pages.map((page) => page.pageid),
+    searchPending: wikipedia.searchPending,
+    searchResult: wikipedia.searchResult,
+    error:
+      wikipedia.error &&
+      `Une erreur s'est produite lors de la recherche.\nMerci de bien vouloir réessayer ultérieurement !`,
   };
 };
 
@@ -188,6 +168,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     addFavoriteAction: (p) => dispatch(addFavoriteAction(p)),
     removeFavoriteAction: (p) => dispatch(removeFavoriteAction(p)),
+    searchAction: (keyword, offset = 0) =>
+      dispatch(searchAction(keyword, offset)),
+    searchClearAction: () => dispatch(searchClearAction()),
   };
 };
 
