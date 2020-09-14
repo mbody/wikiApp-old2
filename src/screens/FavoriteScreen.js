@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {FlatList, Image, Platform, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  LayoutAnimation,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {Card, IconButton, Searchbar, Title} from 'react-native-paper';
 import {addFavoriteAction, removeFavoriteAction} from '../redux/favorites';
 import {searchAction, searchClearAction} from '../redux/wikipedia';
@@ -26,7 +33,9 @@ class FavoritesScreen extends Component<Props> {
                 data={favoritePages}
                 style={styles.list}
                 renderItem={this.renderPageCard}
-                keyExtractor={(item, index) => index.toString()}></FlatList>
+                keyExtractor={(item, index) =>
+                  'page-' + item.pageid
+                }></FlatList>
             ))}
         </View>
       </View>
@@ -53,7 +62,7 @@ class FavoritesScreen extends Component<Props> {
               icon={'heart'}
               color={Colors.gray}
               size={30}
-              onPress={() => this.toggleFavorite(item)}
+              onPress={() => this.onToggleFavorite(item)}
             />
           )}
         />
@@ -61,7 +70,8 @@ class FavoritesScreen extends Component<Props> {
     );
   };
 
-  toggleFavorite = (page) => {
+  onToggleFavorite = (page) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     this.props.removeFavoriteAction(page);
   };
 }

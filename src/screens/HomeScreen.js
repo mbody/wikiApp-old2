@@ -1,6 +1,13 @@
 //import liraries
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, FlatList, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Image,
+  LayoutAnimation,
+} from 'react-native';
 import {Colors, Theme} from '../Theme';
 import {
   ActivityIndicator,
@@ -24,16 +31,28 @@ class HomeScreen extends Component {
     super(props);
   }
 
+  static getDerivedStateFromProps(nextProps, prevState): void {
+    const {searchResult, favoritePageIds} = nextProps;
+    if (
+      searchResult != prevState.searchResult ||
+      favoritePageIds != prevState.favoritePageIds
+    ) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      const resultWithFavorites =
+        searchResult &&
+        searchResult.map((page) => {
+          page.isFavorite = favoritePageIds.indexOf(page.pageid) >= 0;
+          return page;
+        });
+      return {searchResult, resultWithFavorites, favoritePageIds};
+    }
+    return null;
+  }
+
   // --------------------------------------------------- render methods
   render() {
-    const {searchQuery} = this.state;
-    const {favoritePageIds, searchPending, searchResult, error} = this.props;
-    const resultWithFavorites =
-      searchResult &&
-      searchResult.map((page) => {
-        page.isFavorite = favoritePageIds.indexOf(page.pageid) >= 0;
-        return page;
-      });
+    const {searchQuery, resultWithFavorites} = this.state;
+    const {searchPending, error} = this.props;
 
     return (
       <View style={styles.container}>
@@ -46,8 +65,8 @@ class HomeScreen extends Component {
 
         <View style={styles.searchResultsContainer}>
           {error && <Text style={styles.errorMsg}>{error}</Text>}
-          {searchResult &&
-            (searchResult.length === 0 ? (
+          {resultWithFavorites &&
+            (resultWithFavorites.length === 0 ? (
               <Text>Aucun résultat trouvé :-( </Text>
             ) : (
               <FlatList
@@ -110,7 +129,12 @@ class HomeScreen extends Component {
 
   onLoadMore = async () => {
     let {searchQuery} = this.state;
-    this.props.searchAction(searchQuery.trim(), this.props.searchResult.length);
+    if (this.props.searchResult) {
+      this.props.searchAction(
+        searchQuery.trim(),
+        this.props.searchResult.length,
+      );
+    }
   };
 
   onToggleFavorite = (page) => {
