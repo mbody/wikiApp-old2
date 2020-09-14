@@ -20,6 +20,7 @@ import {wikiService} from '../services/WikiService';
 import {connect} from 'react-redux';
 import {addFavoriteAction, removeFavoriteAction} from '../redux/favorites';
 import {searchAction, searchClearAction} from '../redux/wikipedia';
+import * as Animatable from 'react-native-animatable';
 
 class HomeScreen extends Component {
   state = {
@@ -49,6 +50,16 @@ class HomeScreen extends Component {
     return null;
   }
 
+  componentDidUpdate(
+    prevProps: Readonly<P>,
+    prevState: Readonly<S>,
+    snapshot: SS,
+  ): void {
+    if (this.state.searchResult && this.state.searchResult.length === 0) {
+      this.shakeSearchBar();
+    }
+  }
+
   // --------------------------------------------------- render methods
   render() {
     const {searchQuery, resultWithFavorites} = this.state;
@@ -56,12 +67,16 @@ class HomeScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <Searchbar
-          placeholder="Rechercher"
-          onChangeText={this.onChangeText}
-          onIconPress={this.onSearch}
-          value={searchQuery}
-        />
+        <Animatable.View
+          ref={(me) => (this.searchBar = me)}
+          style={{alignSelf: 'stretch'}}>
+          <Searchbar
+            placeholder="Rechercher"
+            onChangeText={this.onChangeText}
+            onIconPress={this.onSearch}
+            value={searchQuery}
+          />
+        </Animatable.View>
 
         <View style={styles.searchResultsContainer}>
           {error && <Text style={styles.errorMsg}>{error}</Text>}
@@ -98,12 +113,16 @@ class HomeScreen extends Component {
             />
           )}
           right={(props) => (
-            <IconButton
-              icon={item.isFavorite ? 'heart' : 'heart-outline'}
-              color={Colors.gray}
-              size={30}
-              onPress={() => this.onToggleFavorite(item)}
-            />
+            <Animatable.View
+              animation={item.isFavorite ? 'pulse' : ''}
+              iterationCount={3}>
+              <IconButton
+                icon={item.isFavorite ? 'heart' : 'heart-outline'}
+                color={Colors.gray}
+                size={30}
+                onPress={() => this.onToggleFavorite(item)}
+              />
+            </Animatable.View>
           )}
         />
       </Card>
@@ -121,6 +140,7 @@ class HomeScreen extends Component {
     const {searchQuery} = this.state;
     if (!searchQuery || searchQuery.trim().length === 0) {
       this.props.searchClearAction();
+      this.shakeSearchBar();
       return;
     }
 
@@ -146,6 +166,9 @@ class HomeScreen extends Component {
   };
 
   // --------------------------------------------------- privates
+  shakeSearchBar() {
+    this.searchBar.shake(1000);
+  }
 
   /**
    * to make each component unique
