@@ -12,6 +12,7 @@ import {addFavoriteAction, removeFavoriteAction} from '../redux/favorites';
 import {searchAction, searchClearAction} from '../redux/wikipedia';
 import {connect} from 'react-redux';
 import {Colors, Theme} from '../Theme';
+import FavoriteButton from '../components/FavoriteButton';
 
 type Props = {};
 
@@ -58,10 +59,8 @@ class FavoritesScreen extends Component<Props> {
             />
           )}
           right={(props) => (
-            <IconButton
-              icon={'heart'}
-              color={Colors.gray}
-              size={30}
+            <FavoriteButton
+              isFavorite={true}
               onPress={() => this.onToggleFavorite(item)}
             />
           )}

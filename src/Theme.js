@@ -7,7 +7,8 @@ export const Colors = {
   white: '#fff',
   gray: '#666',
   background: '#fff',
-  error: '#fc0000'
+  error: '#fc0000',
+  red: '#ff0000',
 };
 
 export const Theme = StyleSheet.create({
@@ -22,4 +23,3 @@ export const Theme = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
