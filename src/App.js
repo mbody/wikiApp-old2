@@ -16,7 +16,7 @@ class App extends Component {
       <>
         <StatusBar barStyle="dark-content" />
         <SafeAreaView>
-          <Text style={styles.sectionTitle}>Hello</Text>
+          <Text style={styles.sectionTitle}>Wiki App</Text>
           <Icon name="rocket" size={80} color="#900" />
         </SafeAreaView>
       </>
