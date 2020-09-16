@@ -44,7 +44,7 @@
 		00E356EE1AD99517003FC87E /* wikiAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = wikiAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* wikiAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = wikiAppTests.m; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* wikiApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = wikiApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Wiki App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wiki App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = wikiApp/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = wikiApp/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = wikiApp/Images.xcassets; sourceTree = "<group>"; };
@@ -174,7 +174,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* wikiApp.app */,
+				13B07F961A680F5B00A75B9A /* Wiki App.app */,
 				00E356EE1AD99517003FC87E /* wikiAppTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* wikiApp-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* wikiApp-tvOSTests.xctest */,
@@ -194,7 +194,6 @@
 				42BE39CDF2FC79780ACF4975 /* Pods-wikiApp-wikiAppTests.debug.xcconfig */,
 				75F3B2FE66531A0D18C5E881 /* Pods-wikiApp-wikiAppTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -239,7 +238,7 @@
 			);
 			name = wikiApp;
 			productName = wikiApp;
-			productReference = 13B07F961A680F5B00A75B9A /* wikiApp.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Wiki App.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2D02E47A1E0B4A5D006451C7 /* wikiApp-tvOS */ = {
@@ -729,7 +728,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = wikiApp;
+				PRODUCT_NAME = "Wiki App";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -751,7 +750,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = wikiApp;
+				PRODUCT_NAME = "Wiki App";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
